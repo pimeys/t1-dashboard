@@ -16,7 +16,7 @@ use std::env;
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all="camelCase")]
-enum EventType {
+enum EntryType {
     Sgv,
     Mbg,
     Cal,
@@ -24,16 +24,31 @@ enum EventType {
 }
 
 #[derive(Deserialize, Debug)]
-#[serde(rename_all="camelCase")]
-struct Entry {
-    #[serde(rename="type")] entry_type: EventType,
-    #[serde(rename="dateString")] date: DateTime<Utc>,
-    sgv: Option<f64>,
-    direction: Option<String>,
-    noise: Option<String>,
-    filtered: Option<f64>,
-    unfiltered: Option<f64>,
-    rssi: Option<f64>,
+#[serde(rename_all = "camelCase", tag = "type")]
+enum Entry {
+    Sgv {
+        #[serde(rename="dateString")]
+        date: DateTime<Utc>,
+
+        sgv: f64,
+        direction: String,
+        noise: f64,
+        filtered: f64,
+        unfiltered: f64,
+        rssi: f64,
+    },
+    Mbg {
+        #[serde(rename="dateString")]
+        date: DateTime<Utc>,
+    },
+    Cal {
+        #[serde(rename="dateString")]
+        date: DateTime<Utc>,
+    },
+    Etc {
+        #[serde(rename="dateString")]
+        date: DateTime<Utc>,
+    },
 }
 
 fn main() {
@@ -44,10 +59,7 @@ fn main() {
     }
     pretty_env_logger::init();
 
-    info!("Moikka moi");
-
     let entries = warp::path("entries");
-
     let entries_index = entries.and(warp::path::index());
 
     let list = warp::get2()
