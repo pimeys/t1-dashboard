@@ -1,14 +1,14 @@
 version: '3'
 services:
-  t1-dashboard:
-    build: .
-    ports:
-      - "1337:1337"
-    depends_on:
-      - timescaledb
-    environment:
-      RUST_BACKTRACE: 1
-      RUST_LOG: info
+# t1-dashboard:
+#   build: .
+#   ports:
+#     - "1337:1337"
+#   depends_on:
+#     - timescaledb
+#   environment:
+#     RUST_BACKTRACE: 1
+#     RUST_LOG: info
   grafana:
     image: grafana/grafana:latest
     ports:
